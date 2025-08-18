@@ -3,12 +3,53 @@
 <html lang="ja">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Let's move the block and let the light transmit!">
-    <title>Transmit</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="Let's move the block and let the light transmit!">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Transmit</title>
+
+	<style>
+		body {
+			margin: 0;
+			overflow: hidden;
+			padding: 0;
+		}
+
+		#background {
+			background-color: black;
+			height: 100vh;
+			width: 100vw;
+		}
+
+		#foreground {
+			background-color: white;
+		}
+
+		@media (min-aspect-ratio: 1/1) {
+			#foreground {
+				position: absolute;
+				top: 20vh;
+				left: calc((100vw - 60vh) / 2);
+				height: 60vh;
+				width: 60vh;
+			}
+		}
+
+		@media (max-aspect-ratio: 1/1) {
+			#foreground {
+				position: absolute;
+				top: calc((100vh - 60vw) / 2);
+				left: 20vw;
+				height: 60vw;
+				width: 60vw;
+			}
+		}
+	</style>
 </head>
 
 <body>
+	<canvas id="background"></canvas>
+	<canvas id="foreground"></canvas>
 </body>
 
 </html>
