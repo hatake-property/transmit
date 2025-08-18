@@ -15,6 +15,10 @@
 			padding: 0;
 		}
 
+		.block {
+			display: none;
+		}
+
 		#background {
 			background-color: black;
 			height: 100vh;
@@ -50,6 +54,50 @@
 <body>
 	<canvas id="background"></canvas>
 	<canvas id="foreground"></canvas>
+	<canvas id="block0" class="block"></canvas>
+	<canvas id="block1" class="block"></canvas>
+	<canvas id="block2" class="block"></canvas>
+	<canvas id="block3" class="block"></canvas>
+	<canvas id="block4" class="block"></canvas>
+	<canvas id="block5" class="block"></canvas>
+	<canvas id="block6" class="block"></canvas>
+	<canvas id="block7" class="block"></canvas>
+	<canvas id="block8" class="block"></canvas>
+	<canvas id="block9" class="block"></canvas>
+	<canvas id="block10" class="block"></canvas>
+	<canvas id="block11" class="block"></canvas>
+	<canvas id="block12" class="block"></canvas>
+	<canvas id="block13" class="block"></canvas>
+	<canvas id="block14" class="block"></canvas>
+	<canvas id="block15" class="block"></canvas>
+	<canvas id="block16" class="block"></canvas>
+	<canvas id="block17" class="block"></canvas>
+	<canvas id="block18" class="block"></canvas>
+	<canvas id="block19" class="block"></canvas>
+	<canvas id="block20" class="block"></canvas>
+	<script>
+		blockSize = 0;
+		side;
+
+		function setBlock(id, top, left, height, width, color) {
+			const block = document.getElementById(id);
+			const fore = window.getComputedStyle(document.getElementById('foreground'));
+			const foreTop = fore.getPropertyValue('top');
+			const foreLeft = fore.getPropertyValue('left');
+			block.style.display = 'block';
+			block.style.top = 'colc(' + foreTop + '+' + side + '*' + top + ')';
+			block.style.left = 'colc(' + foreLeft + '+' + side + '*' + top + ')';
+			block.style.height = 'colc(' + side + '*' + height + ')';
+			block.style.width = 'colc(' + side + '*' + width + ')';
+			block.style.backgroundColor = color;
+		}
+
+		window.addEventListener('load', () => {
+			const fore = window.getComputedStyle(document.getElementById('foreground'));
+			const foreWidth = fore.getPropertyValue('width');
+			side = '(' + foreWidth + '/6)';
+		});
+	</script>
 </body>
 
 </html>
