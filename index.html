@@ -9,7 +9,7 @@
 	<title>Transmit</title>
 
 	<style>
-		body {
+		html, body {
 			margin: 0;
 			overflow: hidden;
 			padding: 0;
@@ -52,7 +52,11 @@
 	<canvas id="foreground"></canvas>
 	<script>
 		var block = [];
-		var color = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'yellow'];
+		let selectedBlock = null;
+		let offsetX;
+		let offsetY;
+		let n;
+		var color = ['aqua', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'yellow'];
 
 		class Block {
 			constructor(x, y, width, height) {
@@ -64,7 +68,6 @@
 
 			drow() {
 				const foreground = document.getElementById('foreground').getContext('2d');
-				const n = document.getElementById('foreground').width / 6;
 				foreground.fillRect(this.x * n, this.y * n, this.width * n, this.height * n);
 			}
 		}
@@ -75,14 +78,14 @@
 			foreCanvas.width = foreCanvas.offsetWidth;
 			foreCanvas.height = foreCanvas.offsetHeight;
 			foreground.clearRect(0, 0, foreground.width, foreground.height);
-			for(i = 0; i < block.length; i ++) {
+			for(let i = 0; i < block.length; i ++) {
 				foreground.fillStyle = color[i];
 				block[i].drow();
 			}
 		}
 
 		function setBlock() {
-			for(i = color.length - 1; i > 0; i --) {
+			for(let i = color.length - 1; i > 0; i --) {
 				j = Math.random() * color.length | 0;
 				temp = color[i];
 				color[i] = color[j];
@@ -103,12 +106,82 @@
 			block[11] = new Block(0, 5, 3, 1);
 		}
 
+		document.getElementById('foreground').addEventListener('pointerdown', (e) => {
+			const rect = e.target.getBoundingClientRect();
+			const x = (e.clientX - rect.left) / n;
+			const y = (e.clientY - rect.top) / n;
+			block.forEach(b => {
+				if (x >= b.x && x <= b.x + b.width && y >= b.y && y <= b.y + b.height) {
+					selectedBlock = b;
+					offsetX = x -  b.x;
+					offsetY = y - b.y;
+				}
+			});
+		});
+
 		window.addEventListener('load', () => {
+			n = document.getElementById('foreground').offsetWidth / 6;
 			setBlock();
 			drow();
 		});
 
+		document.addEventListener('pointermove', (e) => {
+			e.preventDefault();
+			if (!selectedBlock) {
+				return;
+			}
+			const rect = document.getElementById('foreground').getBoundingClientRect();
+			if(selectedBlock.height == 1) {
+				let x = (e.clientX - rect.left) / n - offsetX;
+				if(0 > x || x + selectedBlock.width > 6) {
+					return;
+				}
+				for(let i = 0; i < block.length; i ++) {
+					const b = block[i];
+					if(b === selectedBlock) {
+						continue;
+					}
+					const overlapX = x < b.x + b.width && x + selectedBlock.width > b.x;
+					const overlapY = selectedBlock.y < b.y + b.height && selectedBlock.y + selectedBlock.height > b.y;
+					if(overlapX && overlapY) {
+						return;
+					}
+				}
+				selectedBlock.x = x;
+			} else {
+				let y = (e.clientY - rect.top) / n - offsetY;
+				if(0 > y || y + selectedBlock.height > 6) {
+					return;
+				}
+				for(let i = 0; i < block.length; i ++) {
+					const b = block[i];
+					if(b === selectedBlock) {
+						continue;
+					}
+					const overlapX = selectedBlock.x < b.x + b.width && selectedBlock.x + selectedBlock.width > b.x;
+					const overlapY = y < b.y + b.height && y + selectedBlock.height > b.y;
+					if(overlapX && overlapY) {
+						return;
+					}
+				}
+				selectedBlock.y = y;
+			}
+			drow();
+		}, {
+			passive: false
+		});
+
+		document.addEventListener('pointerup', () => {
+			if(selectedBlock) {
+				selectedBlock.x = Math.floor(selectedBlock.x + 0.5);
+				selectedBlock.y = Math.floor(selectedBlock.y + 0.5);
+				selectedBlock = null;
+			}
+			drow();
+		});
+
 		window.addEventListener('resize', () => {
+			n = document.getElementById('foreground').offsetWidth / 6;
 			drow();
 		});
 	</script>
