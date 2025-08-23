@@ -115,10 +115,10 @@
 
 		function checkNoBlock(x, y, width, height) {
 			for(let i = 0; i < block.length; i ++) {
-				if(!(x >= block[i].x + block[i].width || x + width <= block[j].x)) {
+				if(!(x >= block[i].x + block[i].width || x + width <= block[i].x)) {
 					return false;
 				}
-				if(!(y >= block[j].y + block[j].height || y + height <= block[j].y)) {
+				if(!(y >= block[i].y + block[i].height || y + height <= block[i].y)) {
 					return false;
 				}
 			}
@@ -178,9 +178,8 @@
 			blockLength = Math.floor(Math.random() * 6) + 6;
 			for(let i = 0; i < blockLength; i ++) {
 				switch(Math.floor(Math.random() * 2)) {
-				//	vertical
 					case 0:
-						block[i] = new Block(Math.floor(Math.ramdom() * 6), 0, 1, 0);
+						block[i] = new Block(Math.floor(Math.random() * 6), 0, 1, 0);
 						switch(Math.floor(Math.random() * 3)) {
 							case 0:
 								block[i].y = 0;
@@ -202,7 +201,7 @@
 						break;
 					case 1:
 						block[i] = new Block(Math.floor(Math.random() * 5), Math.floor(Math.random() * 5), 0, 1);
-						block[i].y = block[i].y == 2 ? 5 : block[i];
+						block[i].y = block[i].y == 2 ? 5 : block[i].y;
 						if(block[i].x == 4) {
 							block[i].width = 2;
 						} else {
